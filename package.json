@@ -1,0 +1,17 @@
+{
+  "name": "mailjam",
+  "version": "1.0.0",
+  "description": "Mail Checker IMAP",
+  "main": "index.js",
+  "dependencies": {
+    "cli-progress": "^3.4.0",
+    "imap-simple": "^4.3.0",
+    "node-telegram-bot-api": "^0.40.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
