@@ -6,7 +6,6 @@ const fs = require('fs');
 const cliProgress = require('cli-progress');
 const TelegramBot = require('node-telegram-bot-api');
 var configs = require('./imaps.json');
-
 const stream = fs.createWriteStream("results.txt");
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
