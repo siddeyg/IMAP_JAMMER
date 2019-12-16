@@ -1,2 +1,4 @@
 # IMAP_JAMMER
-Imap Jammer /w TelegramBot 
+Imap Jammer /w TelegramBot
+
+### EDUCATIONAL PURPOSE ONLY
