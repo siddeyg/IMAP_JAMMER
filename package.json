@@ -5,15 +5,17 @@
   "main": "index.js",
   "dependencies": {
     "cli-progress": "^3.4.0",
+    "colors": "^1.4.0",
     "imap-simple": "^4.3.0",
     "inquirer": "^7.0.1",
-    "node-telegram-bot-api": "^0.40.0"
+    "inquirer-fuzzy-path": "^2.2.0",
+    "node-telegram-bot-api": "^0.40.0",
+    "sha256-file": "^1.0.0",
+    "sleep": "^6.1.0"
   },
   "devDependencies": {},
   "scripts": {
-    "attack": "node singleAttack.js",
-    "mutli": "node multiAttack.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "attack": "node attack.js"
   },
   "author": "",
   "license": "ISC"

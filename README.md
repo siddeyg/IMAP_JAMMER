@@ -1,25 +1,38 @@
 # IMAP_JAMMER
 ## Imap Jammer /w TelegramBot
+```
+Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
+```
 
-Imap Jammer goal is to penetrate any webmail using the IMAP protocol
 
-Feel free to add some imaps to the `imaps.json` file
 
-__You can access your bot using the Telegram BOT `@Chichke06`__
+__You can access your bot using the Telegram BOT `@ChichkeBOT`__
 
-**Bot command :**
-- `/log` : Show the latest error message!
+**Telegram Bot command :**
+- `/log` : Show the latest error message
 - `/status` : Show the progress of the IMAP Attack
+- `/start` : Show this list of commands
+  
+## Install dependencies
 
-## Choose your target(s) Attack
+`yarn`
+
+## Launch the Attack
+
+ `yarn attack`
 
 
-`npm run attack`
+## DONE:
+
+- Pick your target
+- Toggle the Telegram Bot
+- Pick your combolist
+- Uses of save files to keep progress of a recent attack
+
+## TODO:
+- Add Imaps to imaps.json to cover every mail company
+- Build an electron Desktop App from this
 
 
-## Run whole dictionary attack
-
-
-`npm run multi`
 
 # EDUCATIONAL PURPOSE ONLY 

@@ -59,11 +59,11 @@
              "@linuxmail.org", "@musician.org", "@contractor.net",
              "@financier.com", "@workmail.com"]
     },
-    "wanadoo" : {
+    "orange" : {
         "host": "imap.orange.fr",
         "port": 993,
         "tls": true,
-        "tag" : ["@wanadoo."]
+        "tag" : ["@orange.fr", "@wanadoo.fr"]
     },
     "mail-ru" : {
         "host": "imap.mail.ru",
