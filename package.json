@@ -10,6 +10,7 @@
     "inquirer": "^7.0.1",
     "inquirer-fuzzy-path": "^2.2.0",
     "node-telegram-bot-api": "^0.40.0",
+    "node-threadpool": "latest",
     "sha256-file": "^1.0.0",
     "sleep": "^6.1.0"
   },
