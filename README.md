@@ -4,6 +4,13 @@
 Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 ```
 
+<hr>
+
+```
+Binaries for LINUX, MACOS and WINDOWS Available in dist/ 
+```
+<hr>
+
 __You can access your bot using the Telegram BOT `@ChichkeBOT`__
 
 **Telegram Bot command :**
@@ -11,7 +18,7 @@ __You can access your bot using the Telegram BOT `@ChichkeBOT`__
 - `/status` : Show the progress of the IMAP Attack
 - `/start` : Show this list of commands
   
-## Install dependencies
+## Build dependencies
 
 `yarn` or `npm i`
 
