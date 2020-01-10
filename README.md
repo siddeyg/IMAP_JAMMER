@@ -4,7 +4,7 @@
 Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 ```
 
-
+`Your combo list MUST be placed inside dictionary folder`
 
 __You can access your bot using the Telegram BOT `@ChichkeBOT`__
 
