@@ -15,11 +15,11 @@ __You can access your bot using the Telegram BOT `@ChichkeBOT`__
   
 ## Install dependencies
 
-`yarn`
+`yarn` or `npm i`
 
 ## Launch the Attack
 
- `yarn attack`
+ `yarn attack` or `npm run attack`
 
 
 ## DONE:
