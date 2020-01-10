@@ -106,5 +106,7 @@ dist
 # Dictionary Files
 dictionary/*
 
+!dictionary/PLACE_HERE_YOUR_COMBO_LIST
+
 save.json
 results.txt
