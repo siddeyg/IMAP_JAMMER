@@ -3,8 +3,11 @@
 ```
 Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 ```
+<hr> 
 
-`Your combo list MUST be placed inside dictionary folder`
+`YOUR COMBOLIST MUST BE PLACED INSIDE THE DICTIONARY FOLDER!`
+
+<hr>
 
 __You can access your bot using the Telegram BOT `@ChichkeBOT`__
 
