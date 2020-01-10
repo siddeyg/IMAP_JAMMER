@@ -11,12 +11,12 @@
     "inquirer-fuzzy-path": "^2.2.0",
     "node-telegram-bot-api": "^0.40.0",
     "node-threadpool": "^1.5.5",
-    "sha256-file": "^1.0.0",
-    "sleep": "^6.1.0"
+    "sha256-file": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
-    "attack": "node attack.js"
+    "attack": "node attack.js",
+    "package": "pkg attack.js --out-path dist"
   },
   "author": "",
   "license": "ISC"

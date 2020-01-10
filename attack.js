@@ -2,7 +2,6 @@ process.env["NTBA_FIX_319"] = 1; // telegram bot warning fix
 // dependencies
 const colors = require("colors");
 const hashFile = require("sha256-file");
-const sleep = require("sleep");
 const imaps = require("imap-simple");
 const fs = require("fs");
 const cliProgress = require("cli-progress");
@@ -167,8 +166,6 @@ handleNoChoice = () => {
   process.stdout.write(colors.white("Please select a least one "));
   process.stdout.write(colors.white.underline.bold("Host"));
   process.stdout.write(colors.white("..."));
-  sleep.msleep(2500);
-  clear();
   selectHostPrompt();
 };
 
@@ -177,8 +174,6 @@ handleDictionaryError = () => {
   process.stdout.write(colors.white("Please select a valid "));
   process.stdout.write(colors.underline.bold("Dictionary"));
   process.stdout.write(colors.white("..."));
-  sleep.msleep(2500);
-  clear();
   selectFilePrompt();
 };
 
@@ -186,8 +181,6 @@ handlePollingError = () => {
   clear();
   process.stdout.write(colors.white("Failed to retrieve the Telegram API, "));
   process.stdout.write(colors.white.bold("Check your internet connection"));
-  sleep.msleep(2500);
-  clear();
   telegramBotPrompt();
 };
 
@@ -232,7 +225,6 @@ main = async () => {
             new Date(element.timestamp).toLocaleString()
         )
       );
-      sleep.msleep(5000);
     }
   });
 
@@ -248,7 +240,6 @@ main = async () => {
       for (let i = 0; i < selection.length; i++)
         for (id in configs[selection[i]].tag)
           if (array[line].includes(configs[selection[i]].tag[id])) max++;
-  clear(); // CLEAR onsiLS
   progressBar.start(max, counter);
 
   // MAIN LOOP
@@ -328,15 +319,15 @@ filePrompt = () => {
       type: "fuzzypath",
       name: "path",
       // excludePath :: (String) -> Bool
+      // excludePath :: (String) -> Bool
       // excludePath to exclude some paths from the file-system scan
-      // excludeFilter :: (String) -> Bool
       // excludeFilter to exclude some paths from the final list, e.g. '.'
       itemType: "file",
       // itemType :: 'any' | 'directory' | 'file'
       // specify the type of nodes to display
       // default value: 'any'
       // example: itemType: 'file' - hides directories from the item list
-      rootPath: "./dictionary/",
+      rootPath: ".",
       // rootPath :: String
       // Root search directory
       message: "Select your dictionary/combolist",
@@ -344,7 +335,7 @@ filePrompt = () => {
       suggestOnly: false,
       // suggestOnly :: Bool
       // Restrict prompt answer to available choices or use them as suggestions
-      depthLimit: 0
+      depthLimit: 6
       // depthLimit :: integer >= 0
       // Limit the depth of sub-folders to scan
       // Defaults to infinite depth if undefined
