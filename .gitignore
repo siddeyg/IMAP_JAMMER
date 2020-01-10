@@ -103,8 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-# Dictionary Folder
-dictionary/
+# Dictionary Files
+dictionary/*
 
 save.json
 results.txt
