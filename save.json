@@ -1,0 +1,25 @@
+[
+  {
+    "timestamp": 1578635773537,
+    "hash": "add0e42c97dfd72b0393ccdecb0bdaa50fbd6c32e47f39d4bb5ad7b222f13c75",
+    "index": "412",
+    "counter": 8,
+    "max": 41778,
+    "found": 0,
+    "host": [
+      "free",
+      "mail"
+    ]
+  },
+  {
+    "timestamp": 1578635802495,
+    "hash": "add0e42c97dfd72b0393ccdecb0bdaa50fbd6c32e47f39d4bb5ad7b222f13c75",
+    "index": "364",
+    "counter": 3,
+    "max": 15076,
+    "found": 0,
+    "host": [
+      "free"
+    ]
+  }
+]

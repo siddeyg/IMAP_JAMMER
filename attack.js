@@ -111,7 +111,6 @@ timedOut = async () => {
 
 connect = async config => {
   // MAKING A SAVE IN CASE OF A TIMEOUT
-
   await imaps
     .connect(config)
     .then(connection => {
@@ -251,7 +250,7 @@ main = async path => {
   // MAIN LOOP
   for (line in array) {
     let config = customConfig(array[line], selection);
-    if (config !== null) await connect(config);
+    if (config) await connect(config);
     if (unreachbleHost) break;
   }
 
