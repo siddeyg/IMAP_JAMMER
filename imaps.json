@@ -5,12 +5,6 @@
         "tls": true,
         "tag" : ["@free.fr"]
     },
-    "google" : {
-        "host": "imap.gmail.com",
-        "port": 993,
-        "tls": true,
-        "tag" : ["@gmail.com"]
-    },
     "yahoo" : {
         "host": "imap.mail.yahoo.com",
         "port": 993,

@@ -144,7 +144,7 @@ cli-cursor@^3.1.0:
   dependencies:
     restore-cursor "^3.1.0"
 
-cli-progress@^3.4.0:
+cli-progress@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/cli-progress/-/cli-progress-3.5.0.tgz#972517f3b71bb6d0ec74ceaeb392005376e9ca54"
   integrity sha512-S1wR4xfcfLWbVBH6RwYat1nMCm2UsuygxNoiRYVAXQsuWKjCRgWRZVohXLmsWfiuAK0FFf7t9OyZ2JBmDWaQGA==
@@ -498,7 +498,7 @@ inquirer@^5.2.0:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
-inquirer@^7.0.1:
+inquirer@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-7.0.3.tgz#f9b4cd2dff58b9f73e8d43759436ace15bed4567"
   integrity sha512-+OiOVeVydu4hnCGLCSX+wedovR/Yzskv9BFqUNNKq9uU2qg7LCcCo3R86S2E7WLo0y/x2pnEZfZe1CoYnORUAw==
@@ -680,7 +680,7 @@ node-telegram-bot-api@^0.40.0:
     request "^2.83.0"
     request-promise "^4.2.2"
 
-node-threadpool@latest:
+node-threadpool@^1.5.5:
   version "1.5.5"
   resolved "https://registry.yarnpkg.com/node-threadpool/-/node-threadpool-1.5.5.tgz#8a44d60afffc272e46dc670f41b5ca7f1cd81f09"
   integrity sha512-5/Czb3gMUQwH1pyT0O+flXRSrW5dhaHBuJFwb81YsnNlDQdJAueIcoKimDO8HXL/iVvU/P9XBnry8HJRK76oIw==

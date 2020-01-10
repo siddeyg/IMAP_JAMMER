@@ -31,6 +31,8 @@ __You can access your bot using the Telegram BOT `@ChichkeBOT`__
 
 ## TODO:
 - Add Imaps to imaps.json to cover every mail company
+- Add Threadpool support
+- Add proxy or TOR implementation
 - Build an electron Desktop App from this
 
 

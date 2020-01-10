@@ -4,13 +4,13 @@
   "description": "Mail Checker IMAP",
   "main": "index.js",
   "dependencies": {
-    "cli-progress": "^3.4.0",
+    "cli-progress": "^3.5.0",
     "colors": "^1.4.0",
     "imap-simple": "^4.3.0",
-    "inquirer": "^7.0.1",
+    "inquirer": "^7.0.3",
     "inquirer-fuzzy-path": "^2.2.0",
     "node-telegram-bot-api": "^0.40.0",
-    "node-threadpool": "latest",
+    "node-threadpool": "^1.5.5",
     "sha256-file": "^1.0.0",
     "sleep": "^6.1.0"
   },

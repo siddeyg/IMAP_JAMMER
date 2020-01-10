@@ -1,5 +1,4 @@
 process.env["NTBA_FIX_319"] = 1; // telegram bot warning fix
-process.env.UV_THREADPOOL_SIZE = 10;
 // dependencies
 const colors = require("colors");
 const hashFile = require("sha256-file");
@@ -24,11 +23,12 @@ const progressBar = new cliProgress.SingleBar(
   cliProgress.Presets.shades_classic
 );
 
-var selection, filePath, id;
+var selection, dictionary, id;
 var max, counter, found, line, toCount, lastLine;
 var resumeSave, unreachbleHost, botEnabled;
 var log = "Nothing!";
 
+dictionary = null;
 max = counter = found = line = toCount = lastLine = 0;
 resumeSave = unreachbleHost = botEnabled = false;
 
@@ -105,7 +105,7 @@ timedOut = async () => {
     console.log(colors.red("[*] Timed out too many times aborting attack!"));
     console.log(colors.red("[*] Current progress is " + counter + " / " + max));
     console.log(colors.red("[*] Found " + found + " working combo..."));
-    process.exit(42);
+    process.exit(1);
   }
 };
 
@@ -133,9 +133,10 @@ connect = async config => {
       if (error.source === "timeout") timedOut();
     })
     .finally(() => {
+      progressBar.increment();
       lastLine = line;
       counter++;
-      progressBar.increment();
+      
     });
 };
 
@@ -205,7 +206,7 @@ readSave = () => {
   return rawData ? JSON.parse(rawData) : [];
 };
 
-main = async path => {
+main = async () => {
   // READING SAVE FILE
 
   const saveData = readSave();
@@ -214,7 +215,7 @@ main = async path => {
   saveData.forEach(element => {
     if (
       JSON.stringify(element.host) === JSON.stringify(selection) &&
-      element.hash === hashFile(path)
+      element.hash === hashFile(dictionary)
     ) {
       line = element.index;
       found = element.found;
@@ -231,9 +232,8 @@ main = async path => {
     }
   });
 
-  filePath = path;
   var array = fs
-    .readFileSync(path)
+    .readFileSync(dictionary)
     .toString()
     .split(/\r?\n/);
 
@@ -244,7 +244,7 @@ main = async path => {
       for (let i = 0; i < selection.length; i++)
         for (id in configs[selection[i]].tag)
           if (array[line].includes(configs[selection[i]].tag[id])) max++;
-  clear(); // CLEAR CLS
+  clear(); // CLEAR onsiLS
   progressBar.start(max, counter);
 
   // MAIN LOOP
@@ -265,8 +265,9 @@ var prompt = inquirer.createPromptModule();
 
 selectFilePrompt = () => {
   filePrompt()
-    .then(dictionary => {
-      main(dictionary.path);
+    .then(output => {
+      dictionary = output.path;
+      main();
     })
     .catch(error => {
       handleDictionaryError();
@@ -296,7 +297,7 @@ onComplete = () => {
       )
     );
 
-  process.exit(0);
+  process.exit();
 };
 
 telegramBotPrompt = () => {
@@ -373,6 +374,7 @@ selectHostPrompt();
 process.stdin.resume(); //so the program will not close instantly
 
 onCleanup = () => {
+  if (!dictionary) return;
   var saveData = readSave();
   var clean = [];
 
@@ -382,7 +384,7 @@ onCleanup = () => {
 
   const session = {
     timestamp: +new Date(),
-    hash: hashFile(filePath),
+    hash: hashFile(dictionary),
     index: line,
     counter: counter,
     max: max,
@@ -395,7 +397,7 @@ onCleanup = () => {
       const element = saveData[key];
       if (
         JSON.stringify(element.host) !== JSON.stringify(selection) ||
-        element.hash !== hashFile(filePath)
+        element.hash !== hashFile(dictionary)
       )
         clean.push(element);
     }
@@ -404,7 +406,7 @@ onCleanup = () => {
   clean.push(session);
   fs.writeFileSync(SAVE_FILE, JSON.stringify(clean, null, 2));
 };
-("");
+
 function exitHandler(options, exitCode) {
   if (options.cleanup) onCleanup();
   if (options.exit) process.exit();
@@ -421,4 +423,4 @@ process.on("SIGUSR1", exitHandler.bind(null, { exit: true }));
 process.on("SIGUSR2", exitHandler.bind(null, { exit: true }));
 
 //catches uncaught exceptions
-process.on("uncaughtException", exitHandler.bind(null, { exit: true }));
+// process.on("uncaughtException", exitHandler.bind(null, { exit: true }));
