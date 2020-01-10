@@ -318,27 +318,12 @@ filePrompt = () => {
     {
       type: "fuzzypath",
       name: "path",
-      // excludePath :: (String) -> Bool
-      // excludePath :: (String) -> Bool
-      // excludePath to exclude some paths from the file-system scan
-      // excludeFilter to exclude some paths from the final list, e.g. '.'
       itemType: "file",
-      // itemType :: 'any' | 'directory' | 'file'
-      // specify the type of nodes to display
-      // default value: 'any'
-      // example: itemType: 'file' - hides directories from the item list
       rootPath: ".",
-      // rootPath :: String
-      // Root search directory
       message: "Select your dictionary/combolist",
       default: null,
       suggestOnly: false,
-      // suggestOnly :: Bool
-      // Restrict prompt answer to available choices or use them as suggestions
       depthLimit: 6
-      // depthLimit :: integer >= 0
-      // Limit the depth of sub-folders to scan
-      // Defaults to infinite depth if undefined
     }
   ]);
 };
