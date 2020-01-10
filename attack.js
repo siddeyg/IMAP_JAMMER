@@ -23,6 +23,7 @@ const progressBar = new cliProgress.SingleBar(
   cliProgress.Presets.shades_classic
 );
 
+var bot;
 var selection, dictionary, id;
 var max, counter, found, line, toCount, lastLine;
 var resumeSave, unreachbleHost, botEnabled;
@@ -46,7 +47,7 @@ function createFile(filename) {
 setupBot = () => {
   botEnabled = true;
   const botToken = "1015158198:AAE8d8TzPix7J5vPa9jr0wAsiJjdjocZiOY";
-  const bot = new TelegramBot(botToken, { polling: true });
+  bot = new TelegramBot(botToken, { polling: true });
 
   bot.addListener("polling_error", error => {
     handlePollingError();
@@ -114,6 +115,7 @@ connect = async config => {
   await imaps
     .connect(config)
     .then(connection => {
+      log = connection.toString();
       found++;
       process.stdout.write(
         colors.green(
@@ -136,7 +138,6 @@ connect = async config => {
       progressBar.increment();
       lastLine = line;
       counter++;
-      
     });
 };
 
@@ -151,6 +152,9 @@ customConfig = (str, selection) => {
             host: configs[selection[i]].host,
             port: configs[selection[i]].port,
             tls: configs[selection[i]].tls,
+            tlsOptions: {
+              rejectUnauthorized: false
+            },
             authTimeout: 5000
           }
         };
@@ -280,7 +284,7 @@ onComplete = () => {
   if (unreachbleHost) {
     console.log(
       colors.white.bold(
-        "Unable to perform the attack check dns or your internet connectivity!"
+        "Unable to perform target host might be down or your internet connectivity!"
       )
     );
     return;
