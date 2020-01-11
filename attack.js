@@ -45,7 +45,7 @@ function createFile(filename) {
 // Multiway Initialization
 setupBot = () => {
   botEnabled = true;
-  const botToken = "1015158198:AAE8d8TzPix7J5vPa9jr0wAsiJjdjocZiOY";
+  const botToken = "YOUR_API_KEY"; // INSERT YOUR API KEY
   bot = new TelegramBot(botToken, { polling: true });
 
   bot.addListener("polling_error", error => {
