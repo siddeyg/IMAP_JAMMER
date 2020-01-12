@@ -38,6 +38,8 @@ export const host = () => {
   let arrayConfigs = [];
   for (const conf in configs) arrayConfigs.push(conf);
 
+  arrayConfigs.pop(); // REMOVE UNWANTED DEFAULT 
+
   return inquirer.prompt({
     type: "checkbox",
     name: "selection",
