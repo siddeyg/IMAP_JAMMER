@@ -109,3 +109,4 @@ dictionary/*
 
 save.json
 results.txt
+*.txt
