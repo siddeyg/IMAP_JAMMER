@@ -1,16 +1,16 @@
 // dependencies
 
+import 'babel-polyfill'
 import colors from 'colors'
 import hashFile from 'sha256-file'
-import configs from './imaps.js'
+import configs from './Imaps.js'
 import os from 'os'
-import * as Logger from './Logger'
-import * as IO from './IO'
-import * as Error from './Error'
-import * as Prompt from './Prompt'
-import * as Config from './Config'
+import * as Logger from './Logger.js'
+import * as IO from './IO.js'
+import * as Error from './Error.js'
+import * as Prompt from './Prompt.js'
+import * as Config from './Config.js'
 import workerFarm from 'worker-farm'
-import 'babel-polyfill'
 
 const options = {
     maxCallsPerWorker: 1,
@@ -47,7 +47,16 @@ const connectThen = config => {
     found++
     Logger.clear()
     console.log(
-        colors.green('[*] ' + config.imap.user + ':' + config.imap.password)
+        colors.green(
+            '[*] ' +
+                config.imap.user +
+                ':' +
+                config.imap.password +
+                ' | ' +
+                found +
+                '/' +
+                (counter + 1)
+        )
     )
     IO.writeResult(config.imap.user + ':' + config.imap.password + os.EOL)
     forward()
@@ -62,9 +71,9 @@ const connectCatch = (error, config) => {
                 ':' +
                 config.imap.password +
                 ' | ' +
-                (counter + 1) +
+                found +
                 '/' +
-                max
+                (counter + 1)
         )
     )
     if (error !== null) {
@@ -124,13 +133,13 @@ const main = async () => {
     })
 
     // INITIALIZING LOOP
-
+    counter = index
     const array = arrayCleaner()
-    Logger.progressBar.start(max, counter)
+    Logger.progressBar.start(max, index)
     // MAIN LOOP
-    for (index in array) {
-        let config = Config.get(array[index], selection)
-        if (config) connect(config, index)
+    for (let i = index; i < array.length; i++) {
+        let config = Config.get(array[i], selection)
+        if (config) connect(config, i)
         if (unreachbleHost) break
     }
 
@@ -145,6 +154,7 @@ const selectFilePrompt = () => {
     Prompt.file()
         .then(output => {
             dictionary = output.path
+            
             main()
         })
         .catch(error => {

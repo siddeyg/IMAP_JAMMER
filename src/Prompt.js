@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import fuzzypath from 'inquirer-fuzzy-path'
-import * as Logger from './Logger'
-import configs from './imaps.js'
+import * as Logger from './Logger.js'
+import configs from './Imaps.js'
 import os from 'os'
 
 export const file = () => {
@@ -38,7 +38,7 @@ export const host = () => {
     let arrayConfigs = []
     for (const conf in configs) arrayConfigs.push(conf)
 
-    arrayConfigs.pop() // REMOVE UNWANTED DEFAULT
+    //arrayConfigs.pop() // REMOVE UNWANTED DEFAULT
 
     return inquirer.prompt({
         type: 'checkbox',

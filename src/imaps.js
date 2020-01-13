@@ -3,7 +3,7 @@ export default {
         host: 'imap.free.fr',
         port: 993,
         tls: true,
-        tag: ['@free.fr'],
+        tag: ['@free.fr', '@alice.'],
     },
     Yahoo: {
         host: 'imap.mail.yahoo.com',
@@ -18,9 +18,9 @@ export default {
         tag: ['@aol.com'],
     },
     Rediffmail: {
-        host: 'imap.rediffmail.com',
-        port: 143,
-        tls: false,
+        host: 'imap.rediffmailpro.com',
+        port: 993,
+        tls: true,
         tag: ['@rediffmail.com'],
     },
     'AT&T': {
@@ -49,8 +49,8 @@ export default {
     },
     Freenet: {
         host: 'mx.freenet.de',
-        port: 110,
-        tls: false,
+        port: 993,
+        tls: true,
         tag: ['@freenet.de'],
     },
     'Mail.com': {
@@ -91,5 +91,11 @@ export default {
         port: 993,
         tls: true,
         tag: ['mail.ru'],
+    },
+    Arcor: {
+        host: 'imap.arcor.de',
+        port: 143,
+        tls: false,
+        tag: ['@arcor.de'],
     },
 }

@@ -1,5 +1,5 @@
-import configs from './imaps.js'
-import * as Constants from './Constants'
+import configs from './Imaps.js'
+import * as Constants from './Constants.js'
 
 export const get = (str, selection) => {
     for (let i = 0; i < selection.length; i++)
