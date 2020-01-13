@@ -2,7 +2,6 @@
     "name": "mailjam",
     "version": "1.0.0",
     "description": "Mail Checker IMAP",
-    "type": "module",
     "main": "src/Attack.js",
     "bin": "build/Attack.js",
     "pkg": {
@@ -31,8 +30,17 @@
         "start": "babel-node ./build/attack.js",
         "build": "babel src/ -d ./build",
         "clean": "rm -rf build dist && mkdir build dist",
-        "pkg": "npm run clean && npm run build && pkg . --out-path dist/ "
+        "pkg": "yarn clean && yarn build && pkg . --out-path dist/ "
     },
-    "author": "",
-    "license": "ISC"
+    "build": {
+      "appId": "com.mailjammer",
+      "mac": {
+        "category": "com.mailjammer.security.bruteforce"
+      }
+    },
+    "author": "@Chichke",
+    "license": "ISC",
+    "devDependencies": {
+        "electron-builder": "^21.2.0"
+    }
 }
