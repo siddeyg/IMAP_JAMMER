@@ -1,5 +1,4 @@
 # IMAP_JAMMER
-## Imap Jammer 
 ```
 Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 ```
@@ -7,7 +6,7 @@ Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 <hr>
 
 ```
-Place wordlist at root of IMAP_JAMMER/
+Builded script is available inside dist/ folder
 ```
 
 <hr>
@@ -22,18 +21,17 @@ Place wordlist at root of IMAP_JAMMER/
 
 
 ## DONE:
-
+- Added Multithreading support
 - Pick your target
-- Toggle the Telegram Bot
 - Pick your combolist
 - Uses of save files to keep progress of a recent attack
 
 ## TODO:
 - Add Imaps to imaps.json to cover every mail company
-- Add Threadpool support
 - Add proxy or TOR implementation
 - Build an electron Desktop App from this
 
 
 
 # EDUCATIONAL PURPOSE ONLY 
+# I'M NOT RESPONSIBLE FOR WHAT YOU DO USING THIS SOFTWARE 
