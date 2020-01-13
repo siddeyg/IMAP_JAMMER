@@ -2,7 +2,16 @@
   "name": "mailjam",
   "version": "1.0.0",
   "description": "Mail Checker IMAP",
-  "main": "/src/Attack.js",
+  "main": "src/Attack.js",
+  "bin": "build/Attack.js",
+  "pkg": {
+    "assets": [
+      ".env"
+    ],
+    "scripts": [
+      "build/*.js"
+    ]
+  },
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -17,10 +26,12 @@
     "sha256-file": "^1.0.0",
     "worker-farm": "^1.7.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "start": "babel-node --presets env ./src/attack.js",
-    "package": "pkg . --out-path dist"
+    "start": "babel-node --presets env src/attack.js",
+    "build": "babel src/ -d ./build",
+    "clean": "rm -rf build dist && mkdir build dist",
+    "pkg": "npm run clean && npm run build && pkg . --out-path dist"
+
   },
   "author": "",
   "license": "ISC"

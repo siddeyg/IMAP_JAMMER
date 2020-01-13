@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import fuzzypath from "inquirer-fuzzy-path";
 import * as Logger from "./Logger";
-import * as configs from "./imaps.json";
+import configs from "./imaps.js";
 import os from "os";
 
 export const file = () => {

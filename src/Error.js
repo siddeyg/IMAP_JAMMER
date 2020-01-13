@@ -1,4 +1,3 @@
-import * as Logger from "./Logger";
 import colors from "colors";
 
 export const noHost = () => {

@@ -1,4 +1,4 @@
-import * as configs from './imaps.json';
+import configs from "./imaps.js";
 import * as Constants from './Constants';
 
 export const get = (str, selection) => {

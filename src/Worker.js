@@ -1,7 +1,7 @@
 import imaps from "imap-simple";
 
-module.exports = async function(config, callback) {
-  await imaps
+module.exports = function(config, callback) {
+  imaps
     .connect(config)
     .then(connection => {
       callback(null, config);

