@@ -5,9 +5,9 @@ Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 
 <hr>
 
-```
-Builded script is available inside dist/ folder
-```
+
+### Builded script is available inside [dist/](https://github.com/chichke/IMAP_JAMMER/tree/master/dist) folder
+
 
 <hr>
 
