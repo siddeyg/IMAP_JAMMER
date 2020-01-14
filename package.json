@@ -27,7 +27,7 @@
         "worker-farm": "^1.7.0"
     },
     "scripts": {
-        "start": "babel-node ./build/attack.js",
+        "start": "babel-node ./src/attack.js",
         "build": "babel src/ -d ./build",
         "clean": "rm -rf build dist && mkdir build dist",
         "pkg": "yarn clean && yarn build && pkg . --out-path dist/ "

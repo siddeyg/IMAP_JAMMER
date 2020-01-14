@@ -1,4 +1,4 @@
-import * as Constants from './Constants'
+import * as Constants from './Constants.js'
 import os from 'os'
 import fs from 'fs'
 import colors from 'colors'

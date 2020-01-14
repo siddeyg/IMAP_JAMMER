@@ -15,7 +15,7 @@ export default {
         host: 'imap.aol.com',
         port: 993,
         tls: true,
-        tag: ['@aol.com'],
+        tag: ['@aol.com', '@verizon.net'],
     },
     Rediffmail: {
         host: 'imap.rediffmailpro.com',
@@ -45,7 +45,7 @@ export default {
         host: 'imap-mail.outlook.com',
         port: 993,
         tls: true,
-        tag: ['@live.', '@outlook.'],
+        tag: ['@live.com', '@outlook.com', '@hotmail.com', '@msn.com', '@passport.com', '@passport.net'],
     },
     Freenet: {
         host: 'mx.freenet.de',
@@ -97,5 +97,11 @@ export default {
         port: 143,
         tls: false,
         tag: ['@arcor.de'],
+    },
+    NTL: {
+        host: 'imap.ntlworld.com',
+        port: 993,
+        tls: true,
+        tag: ['@ntlworld.com'],
     },
 }
