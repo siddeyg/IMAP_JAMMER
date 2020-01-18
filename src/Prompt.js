@@ -14,8 +14,8 @@ export const file = () => {
                           nodePath.includes('node_modules') ||
                           nodePath.includes('/Library/')
                     : nodePath.includes('/.') || // ELSE
-                          nodePath.includes('/AppData/') ||
-                          nodePath.includes('/MicrosoftEdgeBackups/') ||
+                          nodePath.includes('AppData') ||
+                          nodePath.includes('MicrosoftEdgeBackups') ||
                           nodePath.includes('node_modules') 
             },
             excludeFilter: nodePath =>
