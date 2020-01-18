@@ -14,8 +14,7 @@ export const file = () => {
                           nodePath.includes('node_modules') ||
                           nodePath.includes('/Library/')
                     : intToBool(nodePath.indexOf('/.')) || // ELSE
-                    intToBool(nodePath.indexOf('Microsoft')) ||
-                    intToBool(nodePath.indexOf('AppData'))
+                    intToBool(nodePath.indexOf('Microsoft')) 
 
             },
             excludeFilter: nodePath =>
