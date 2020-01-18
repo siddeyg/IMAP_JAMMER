@@ -33,7 +33,7 @@ export const file = () => {
     ])
 }
 
-const intToBool = (i) => i === -1 ? true : false
+const intToBool = (i) => i === -1 ? false : true
 
 export const host = () => {
     Logger.clear()
