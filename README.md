@@ -6,7 +6,7 @@ Imap Jammer main goal is to penetrate any webmail using the IMAP protocol
 <hr>
 
 
-### Builded script is available inside [dist/](https://github.com/chichke/IMAP_JAMMER/tree/master/dist) folder
+### Download : [Windows](https://github.com/chichke/IMAP_JAMMER/raw/master/dist/mailjam-win.exe) | [Mac](https://github.com/chichke/IMAP_JAMMER/raw/master/dist/mailjam-macos) | [Linux](https://github.com/chichke/IMAP_JAMMER/raw/master/dist/mailjam-linux) 
 
 
 <hr>
