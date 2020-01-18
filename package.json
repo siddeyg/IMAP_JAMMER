@@ -17,7 +17,7 @@
         "babel-preset-env": "^1.7.0",
         "cli-progress": "^3.5.0",
         "colors": "^1.4.0",
-        "core-js": "^3.6.3",
+        "core-js": "^3.6.4",
         "imap-simple": "^4.3.0",
         "inquirer": "^7.0.3",
         "inquirer-fuzzy-path": "^2.2.0",

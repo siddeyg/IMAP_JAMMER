@@ -10,11 +10,13 @@ export const file = () => {
         {
             excludePath: nodePath => {
                 return os.platform() === 'darwin' // IF MACOS
-                    ? nodePath.includes('/.') || // REMOVE
+                    ? nodePath.includes('/.') || // REMOVE THESE DIRECTORY FROM THE SEARCH
                           nodePath.includes('node_modules') ||
                           nodePath.includes('/Library/')
-                    : nodePath.includes('/.') ||
-                          nodePath.includes('node_modules') // FALSE
+                    : nodePath.includes('/.') || // ELSE
+                          nodePath.includes('/AppData/') ||
+                          nodePath.includes('/MicrosoftEdgeBackups/') ||
+                          nodePath.includes('node_modules') 
             },
             excludeFilter: nodePath =>
                 !(nodePath.includes('.txt') && nodePath !== 'results.txt'),
