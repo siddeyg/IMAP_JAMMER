@@ -9,17 +9,15 @@ export const file = () => {
     return inquirer.prompt([
         {
             excludePath: nodePath => {
-                return os.platform() === 'darwin' // IF MACOS
-                    ? nodePath.includes('/.') || // REMOVE THESE DIRECTORY FROM THE SEARCH
-                          nodePath.includes('node_modules') ||
-                          nodePath.includes('/Library/')
-                    : intToBool(nodePath.indexOf('/.')) || // ELSE
+                return  intToBool(nodePath.indexOf('/.')) || // REMOVE THESE DIRECTORY FROM THE SEARCH
+                intToBool(nodePath.indexOf('node_modules')) ||
+                          intToBool(nodePath.indexOf('/Library/')) ||
                     intToBool(nodePath.indexOf('Microsoft')) ||
                     intToBool(nodePath.indexOf('AppData'))
 
             },
             excludeFilter: nodePath =>
-                !(nodePath.includes('.txt') && nodePath !== 'results.txt'),
+                !(intToBool(nodePath.indexOf('.txt')) && nodePath !== 'results.txt'),
 
             // excludePath :: (String) -> Bool
             // excludePath to exclude some paths from the file-system scan
@@ -35,7 +33,7 @@ export const file = () => {
     ])
 }
 
-const intToBool = (i) => i === -1 ? false : true
+const intToBool = (i) => i !== -1
 
 export const host = () => {
     Logger.clear()
