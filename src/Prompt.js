@@ -13,8 +13,9 @@ export const file = () => {
                     ? nodePath.includes('/.') || // REMOVE THESE DIRECTORY FROM THE SEARCH
                           nodePath.includes('node_modules') ||
                           nodePath.includes('/Library/')
-                    : nodePath.includes('/.') || // ELSE
-                          nodePath.includes('node_modules') 
+                    : intToBool(nodePath.indexOf('/.')) || // ELSE
+                    intToBool(nodePath.indexOf('AppData')) ||
+                    intToBool(nodePath.indexOf('Microsoft'))
             },
             excludeFilter: nodePath =>
                 !(nodePath.includes('.txt') && nodePath !== 'results.txt'),
@@ -32,6 +33,8 @@ export const file = () => {
         },
     ])
 }
+
+const intToBool = (i) => i === -1 ? true : false
 
 export const host = () => {
     Logger.clear()
